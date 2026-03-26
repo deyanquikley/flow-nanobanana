@@ -3,20 +3,19 @@ const path = require('path');
 /**
  * Opens the detail view for a specific generated image and downloads it.
  * @param {Page} page - The Playwright Page object.
- * @param {number} imageIndex - The index of the image to download (0 to count - 1).
+ * @param {string} targetSrc - The exact image URL to target and click.
  * @param {number} promptIndex - The index of the prompt.
  * @param {string} outputDir - The directory to save the download to.
  * @param {string} quality - The quality to download ('1k' or '2k').
  */
-async function downloadResult(page, imageIndex, promptIndex, outputDir, quality = '1k') {
-    console.log(`Generation complete. Opening detail view for image ${imageIndex + 1}...`);
+async function downloadResult(page, targetSrc, promptIndex, outputDir, quality = '1k') {
+    console.log(`Generation complete. Opening detail view for matching new image...`);
     
-    // Find the newest large image at the specific index
-    const targetImage = await page.evaluateHandle((idx) => {
+    // Find the specific image by exact src
+    const targetImage = await page.evaluateHandle((src) => {
         const imgs = Array.from(document.querySelectorAll('img'));
-        const largeImgs = imgs.filter(img => img.width > 100 && img.height > 100);
-        return largeImgs.length > idx ? largeImgs[idx] : null;
-    }, imageIndex);
+        return imgs.find(img => img.src === src);
+    }, targetSrc);
 
     if (!targetImage) {
         throw new Error("Could not find any generated image to click.");

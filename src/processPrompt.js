@@ -10,6 +10,12 @@ async function processPrompt(page, prompt) {
     await promptInput.fill(prompt);
     await page.waitForTimeout(500);
 
+    const oldSrcs = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('img'))
+            .filter(img => img.width > 100 && img.height > 100)
+            .map(img => img.src);
+    });
+
     console.log('Clicking Create...');
     // Use the fixed specific selector to avoid strict mode violations
     const createButton = page.locator('button').filter({ 
@@ -17,6 +23,8 @@ async function processPrompt(page, prompt) {
     });
     await createButton.waitFor({ state: 'visible' });
     await createButton.click();
+    
+    return oldSrcs;
 }
 
 module.exports = processPrompt;

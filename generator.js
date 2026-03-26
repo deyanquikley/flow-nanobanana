@@ -50,14 +50,14 @@ async function run() {
 
             try {
                 // 6. Process Prompt
-                await processPrompt(page, prompt);
+                const oldSrcs = await processPrompt(page, prompt);
 
                 // 7. Wait for Generation
-                await waitForGeneration(page);
+                const newSrcs = await waitForGeneration(page, oldSrcs, config.count);
 
                 // 8. Download Result
-                for (let j = 0; j < config.count; j++) {
-                    await downloadResult(page, j, i, outputDir, config.quality);
+                for (let j = 0; j < Math.min(config.count, newSrcs.length); j++) {
+                    await downloadResult(page, newSrcs[j], i, outputDir, config.quality);
                     // 9. Return to Grid
                     await returnToGrid(page);
                     await page.waitForTimeout(1000);
