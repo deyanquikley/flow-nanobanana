@@ -17,4 +17,8 @@
 - Created `src/processPrompt.js` for prompt injection. (Commit: 2e87e26)
 - Created `src/waitForGeneration.js` for progress monitoring. (Commit: 19b327f)
 - Created `src/downloadResult.js` for downloading results. (Commit: cc9e450)
-- Created `src/returnToGrid.js` for UI navigation.
+- Created `src/returnToGrid.js` for UI navigation. (Commit: df2bf21)
+- Refactored `generator.js` to use modular architecture. (Commit: cc9d579)
+
+### [Added] - 2026-03-26
+- Created a premium GUI configuration dashboard (`src/gui/index.html`).

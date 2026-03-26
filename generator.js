@@ -10,21 +10,32 @@ const waitForGeneration = require('./src/waitForGeneration');
 const downloadResult = require('./src/downloadResult');
 const returnToGrid = require('./src/returnToGrid');
 
+// New GUI & Config Imports
+const guiLauncher = require('./src/guiLauncher');
+const configureProject = require('./src/configureProject');
+
 async function run() {
     const userDataDir = path.join(__dirname, '.google-session');
-    const promptsFile = path.join(__dirname, 'prompts.txt');
     const outputDir = path.join(__dirname, 'output');
 
     try {
-        // 1. Read prompts
+        // 1. Initialize Browser
+        const { context, page } = await initBrowser(userDataDir, false);
+
+        // 2. Launch GUI Dashboard to get User Configuration
+        const config = await guiLauncher(context, page);
+        console.log('Starting automation with config:', config);
+
+        // 3. Read prompts based on GUI selection
+        const promptsFile = path.join(__dirname, config.promptFile);
         const prompts = readPrompts(promptsFile);
-        console.log(`Loaded ${prompts.length} prompts.`);
+        console.log(`Loaded ${prompts.length} prompts from ${config.promptFile}.`);
 
-        // 2. Initialize Browser
-        const { context, page } = await initBrowser(userDataDir);
-
-        // 3. Navigate to Flow
+        // 4. Navigate to Flow
         await navigateToFlow(page);
+
+        // 5. Apply UI Settings (Model, Count, Ratio)
+        await configureProject(page, config);
 
         // Ensure output directory exists
         if (!fs.existsSync(outputDir)) {
@@ -38,17 +49,17 @@ async function run() {
             console.log(`\n[${i + 1}/${prompts.length}] Processing: ${prompt}`);
 
             try {
-                // 4. Process Prompt
+                // 6. Process Prompt
                 await processPrompt(page, prompt);
 
-                // 5. Wait for Generation
+                // 7. Wait for Generation
                 await waitForGeneration(page);
 
-                // 6. Download Result
+                // 8. Download Result
                 const firstTile = page.locator('div[role="listitem"]').first();
-                await downloadResult(page, firstTile, i, outputDir);
+                await downloadResult(page, firstTile, i, outputDir, config.quality);
 
-                // 7. Return to Grid
+                // 9. Return to Grid
                 await returnToGrid(page);
 
                 // Delay between prompts
