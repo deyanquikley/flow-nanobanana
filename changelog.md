@@ -1,5 +1,11 @@
 # Changelog - Playwright Flow Automation
 
+## [Custom Output & Naming] - 2026-03-26 (Commit: 7711871)
+- **Feature**: Added "Output Directory" and "Filename Prefix" fields to the GUI dashboard.
+- **Feature**: Implemented a global session counter for filenames.
+- **Refactor**: Updated `downloadResult.js` to use the format `[Index]_[Prefix]_[Name]_[Timestamp].[Ext]` as requested.
+- **Logic**: Added automated directory creation (`fs.mkdirSync recursive`) for custom output paths chosen in the GUI.
+
 ## [Dynamic File Picker] - 2026-03-26 (Commit: 279d825)
 - **Feature**: Replaced the previous dropdown select menu with a native HTML5 `<input type="file">` in `index.html`. Users can now browse their local File Explorer to select any `.txt` prompt file directly.
 - **Refactor**: Modified `generator.js` to parse the `promptsContent` array transmitted directly from the GUI's `FileReader` instead of reading via the Node.js backend to circumvent static path mappings.
