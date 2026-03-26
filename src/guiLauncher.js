@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
 
 /**
  * Launches the local GUI dashboard and waits for user configuration.
@@ -19,6 +20,18 @@ async function guiLauncher(context, page) {
             return {
                 defaultOutputDir: path.resolve(__dirname, '..', 'output'),
             };
+        });
+
+        // Expose function to trigger Windows folder picker
+        await page.exposeFunction('selectFolder', () => {
+            try {
+                const psCommand = `Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Select Output Directory'; if($f.ShowDialog() -eq 'OK') { $f.SelectedPath }`;
+                const output = execSync(`powershell -Command "${psCommand}"`, { encoding: 'utf-8' });
+                return output.trim();
+            } catch (err) {
+                console.error("Error opening folder picker:", err);
+                return null;
+            }
         });
 
         // Expose function to submit config

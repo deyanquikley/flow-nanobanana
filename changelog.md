@@ -1,6 +1,7 @@
 # Changelog - Playwright Flow Automation
 
-## [Custom Output & Naming] - 2026-03-26 (Commit: 7711871)
+## [Custom Output & Naming] - 2026-03-26 (Commit: 7711871, f6fdc4a)
+- **Fix**: Enabled vertical scrolling in `index.html` by replacing `height: 100vh` with `min-height: 100vh` and removing `overflow: hidden`.
 - **Feature**: Added "Output Directory" and "Filename Prefix" fields to the GUI dashboard.
 - **Feature**: Implemented a global session counter for filenames.
 - **Refactor**: Updated `downloadResult.js` to use the format `[Index]_[Prefix]_[Name]_[Timestamp].[Ext]` as requested.

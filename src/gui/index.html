@@ -173,7 +173,10 @@
 
         <div class="form-group">
             <label>Output Directory</label>
-            <input type="text" id="outputPath" placeholder="C:\Users\USER\..." style="padding: 12px; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; width: 100%; color: white; font-family: monospace; font-size: 13px;">
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="outputPath" placeholder="C:\Users\USER\..." style="flex: 1; padding: 12px; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font-family: monospace; font-size: 13px;">
+                <button type="button" onclick="browseFolder()" style="padding: 0 16px; background: rgba(99, 102, 241, 0.2); border: 1px solid var(--primary); border-radius: 12px; color: white; cursor: pointer; font-size: 13px; transition: background 0.2s;">Browse</button>
+            </div>
         </div>
 
         <div class="form-group">
@@ -246,6 +249,15 @@
                 reader.readAsText(file);
             }
         });
+
+        async function browseFolder() {
+            if (window.selectFolder) {
+                const path = await window.selectFolder();
+                if (path) {
+                    document.getElementById('outputPath').value = path;
+                }
+            }
+        }
 
         async function start() {
             if (!fileContent) {
