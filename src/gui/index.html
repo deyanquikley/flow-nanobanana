@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Automation Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .radio-label {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .radio-option input:checked + .radio-label {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider-value {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 20px;
+        }
+
+        button.start-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, var(--primary), #8b5cf6);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button.start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5);
+        }
+
+        button.start-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h1>Flow Automation</h1>
+        <p class="subtitle">Configure your generation preferences</p>
+
+        <div class="form-group">
+            <label>Prompts File (.txt)</label>
+            <select id="promptFile">
+                <option value="prompts.txt">prompts.txt</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Model</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" name="model" value="nano2" id="m1" checked>
+                    <label class="radio-label" for="m1">Nano Banana 2</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="model" value="nanopro" id="m2">
+                    <label class="radio-label" for="m2">Nano Banana Pro</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Aspect Ratio</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" name="ratio" value="horizontal" id="r1" checked>
+                    <label class="radio-label" for="r1">Horizontal (16:9)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="ratio" value="vertical" id="r2">
+                    <label class="radio-label" for="r2">Vertical (9:16)</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Images per Prompt: <span id="countVal" class="slider-value">1</span></label>
+            <div class="slider-container">
+                <input type="range" id="count" min="1" max="4" value="1" oninput="document.getElementById('countVal').innerText = this.value">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Download Quality</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" name="quality" value="1k" id="q1" checked>
+                    <label class="radio-label" for="q1">1K Original</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="quality" value="2k" id="q2">
+                    <label class="radio-label" for="q2">2K Upscaled</label>
+                </div>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="start()">Launch Automation</button>
+    </div>
+
+    <script>
+        async function start() {
+            const config = {
+                promptFile: document.getElementById('promptFile').value,
+                model: document.querySelector('input[name="model"]:checked').value,
+                ratio: document.querySelector('input[name="ratio"]:checked').value,
+                count: parseInt(document.getElementById('count').value),
+                quality: document.querySelector('input[name="quality"]:checked').value
+            };
+            
+            // Call the exposed function from Node.js
+            if (window.submitConfig) {
+                await window.submitConfig(config);
+            } else {
+                console.log('Mock Start:', config);
+                alert('Automation starting with: ' + JSON.stringify(config));
+            }
+        }
+
+        // Initialize file list if possible
+        window.onload = async () => {
+            if (window.getPromptFiles) {
+                const files = await window.getPromptFiles();
+                const select = document.getElementById('promptFile');
+                select.innerHTML = '';
+                files.forEach(f => {
+                    const opt = document.createElement('option');
+                    opt.value = f;
+                    opt.innerText = f;
+                    select.appendChild(opt);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
