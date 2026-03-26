@@ -35,7 +35,8 @@ async function configureProject(page, config) {
     // 3. Select Image Count
     if (config.count) {
         console.log(`Setting image count to: ${config.count}`);
-        const countTab = page.locator(`button[role="tab"][id*="trigger-${config.count}"]`);
+        // Use ends-with selector to avoid partial matches
+        const countTab = page.locator(`button[role="tab"][id$="-trigger-${config.count}"]`);
         await countTab.click();
         await page.waitForTimeout(300);
     }
@@ -44,7 +45,8 @@ async function configureProject(page, config) {
     if (config.ratio) {
         console.log(`Setting aspect ratio to: ${config.ratio}`);
         const ratioId = config.ratio === 'vertical' ? 'PORTRAIT' : 'LANDSCAPE';
-        const ratioTab = page.locator(`button[role="tab"][id*="trigger-${ratioId}"]`);
+        // Use ends-with selector to avoid partial matches (e.g. LANDSCAPE vs LANDSCAPE_4_3)
+        const ratioTab = page.locator(`button[role="tab"][id$="-trigger-${ratioId}"]`);
         await ratioTab.click();
         await page.waitForTimeout(300);
     }
