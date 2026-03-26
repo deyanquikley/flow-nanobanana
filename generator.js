@@ -58,7 +58,7 @@ async function run() {
 
             // 2. Click Create
             console.log('Clicking Create...');
-            const createButton = page.locator('button:has-text("arrow_forward")').or(page.getByRole('button', { name: /Create/i }));
+            const createButton = page.locator('button').filter({ has: page.locator('i:text("arrow_forward")') });
             await createButton.waitFor({ state: 'visible' });
             await createButton.click();
 
