@@ -1,6 +1,7 @@
 # Changelog - Playwright Flow Automation
 
-## [Native Folder Picker] - 2026-03-26 (Commit: 3a71f62)
+## [Native Folder Picker] - 2026-03-26 (Commit: 3a71f62, cd2bbb1)
+- **Fix**: Resolved a bug where selecting a different model in the GUI (e.g., Nano Banana Pro) was ignored. The script now correctly identifies and opens the nested Radix UI dropdown menu to click the specific model option before proceeding.
 - **Feature**: Added a "Browse" button next to the Output Directory field. Clicking it opens a native Windows folder selection dialog powered by PowerShell.
 - **Refactor**: Integrated `child_process` in `guiLauncher.js` to bridge browser requests to the OS dialog.
 
