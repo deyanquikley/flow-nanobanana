@@ -1,0 +1,13 @@
+{
+  "name": "flow-automation",
+  "version": "1.0.0",
+  "description": "Automated image/video generation for Google Labs Flow",
+  "main": "generator.js",
+  "dependencies": {
+    "playwright": "latest",
+    "playwright-extra": "latest",
+    "puppeteer-extra-plugin-stealth": "latest"
+  },
+  "author": "",
+  "license": "ISC"
+}
