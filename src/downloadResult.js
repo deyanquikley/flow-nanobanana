@@ -49,7 +49,16 @@ async function downloadResult(page, targetSrc, promptIndex, outputDir, quality =
         qualityOption.click(),
     ]);
 
-    const fileName = download.suggestedFilename() || `generation_${Date.now()}_${index}.png`;
+    const suggested = download.suggestedFilename();
+    let fileName;
+    if (suggested) {
+        const ext = path.extname(suggested);
+        const base = path.basename(suggested, ext);
+        fileName = `${base}_${Date.now()}${ext}`;
+    } else {
+        fileName = `generation_${Date.now()}_${promptIndex}.png`;
+    }
+    
     const filePath = path.join(outputDir, fileName);
     await download.saveAs(filePath);
     console.log(`SUCCESS: Saved to ${filePath}`);
