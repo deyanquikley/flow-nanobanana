@@ -16,19 +16,39 @@ async function configureProject(page, config) {
     // 2. Select Model
     if (config.model) {
         console.log(`Selecting model: ${config.model}`);
-        // Click the model dropdown inside settings if it's nested, 
-        // but based on subagent, the first click might have opened it already 
-        // or we need to click the specific model row.
-        const modelLabel = config.model === 'nanopro' ? 'Nano Banana Pro' : 'Nano Banana 2';
-        const modelItem = page.locator('[role="menuitem"]').filter({ hasText: modelLabel });
-        if (await modelItem.isVisible()) {
-            await modelItem.click();
+        
+        // Flow uses Radix UI. First button (settingsButton) opens the main popover.
+        // Inside the popover, there is a model select button we need to click.
+        const activeDialog = page.locator('[role="dialog"], [data-radix-popper-content-wrapper]').last();
+        
+        // Find the specific button for model selection inside the dialog
+        const modelDropdownTrigger = activeDialog.locator('button[role="combobox"], button[aria-haspopup]').filter({ hasText: /Nano Banana|Imagen/i }).first();
+        
+        if (await modelDropdownTrigger.isVisible()) {
+            await modelDropdownTrigger.click();
             await page.waitForTimeout(500);
-            // Re-open settings if it closed after selection
-            if (!(await page.locator('[role="tab"]').first().isVisible())) {
+        } else {
+            // Fallback: click any inner button that looks like a model trigger
+            const genericTrigger = activeDialog.locator('button').filter({ hasText: /Nano Banana|Imagen/i }).first();
+            if (await genericTrigger.isVisible()) await genericTrigger.click();
+            await page.waitForTimeout(500);
+        }
+
+        // Now the dropdown should be open. Target the menu option.
+        const modelLabel = config.model === 'nanopro' ? 'Pro' : '2'; // Less strict matching
+        const modelItem = page.locator('[role="option"], [role="menuitem"]').filter({ hasText: new RegExp(`Nano Banana ${modelLabel}`, 'i') }).first();
+        
+        if (await modelItem.isVisible()) {
+            await modelItem.click({ force: true });
+            await page.waitForTimeout(500);
+            
+            // Re-open main settings popover if selecting the model completely closed everything
+            if (!(await page.locator('button[role="tab"]').first().isVisible())) {
                 await settingsButton.click();
                 await page.waitForTimeout(500);
             }
+        } else {
+            console.log(`WARNING: Could not find model option for ${config.model}. Keeping current.`);
         }
     }
 

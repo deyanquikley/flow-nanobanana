@@ -1,5 +1,9 @@
 # Changelog - Playwright Flow Automation
 
+## [Native Folder Picker] - 2026-03-26 (Commit: 3a71f62)
+- **Feature**: Added a "Browse" button next to the Output Directory field. Clicking it opens a native Windows folder selection dialog powered by PowerShell.
+- **Refactor**: Integrated `child_process` in `guiLauncher.js` to bridge browser requests to the OS dialog.
+
 ## [Custom Output & Naming] - 2026-03-26 (Commit: 7711871, f6fdc4a)
 - **Fix**: Enabled vertical scrolling in `index.html` by replacing `height: 100vh` with `min-height: 100vh` and removing `overflow: hidden`.
 - **Feature**: Added "Output Directory" and "Filename Prefix" fields to the GUI dashboard.
