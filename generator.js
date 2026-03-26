@@ -56,11 +56,12 @@ async function run() {
                 await waitForGeneration(page);
 
                 // 8. Download Result
-                const firstTile = page.locator('div[role="listitem"]').first();
-                await downloadResult(page, firstTile, i, outputDir, config.quality);
-
-                // 9. Return to Grid
-                await returnToGrid(page);
+                for (let j = 0; j < config.count; j++) {
+                    await downloadResult(page, j, i, outputDir, config.quality);
+                    // 9. Return to Grid
+                    await returnToGrid(page);
+                    await page.waitForTimeout(1000);
+                }
 
                 // Delay between prompts
                 await page.waitForTimeout(2000);

@@ -1,6 +1,13 @@
 # Changelog - Playwright Flow Automation
 
 ## [Unreleased]
+- **Bug Fix**: Implemented looping behavior to download all generated images (1-4) based on the input configuration instead of just the first image.
+- **Refactor**: Modified `downloadResult.js` to accept `imageIndex` to properly select the Nth generated image from the grid.
+- **Note**: Re-tested execution context (Git commit unavailable locally).
+- Improved reliability of `waitForGeneration.js` by tracking large images instead of specific DOM containers.
+- Fixed `downloadResult.js` failing to open the detail view by calculating and clicking the newly generated image element rather than relying on a potentially obsolete container locator.
+- Handled the quality selection button click more robustly in `downloadResult.js` to handle text nested in distinct spans.
+- Maintained downloaded file extension accuracy using Playwright's `suggestedFilename()`.
 
 ### [Initial State] - 2026-03-26
 - Initial implementation of `generator.js` with Full Stealth Mode and Download logic.
@@ -8,6 +15,7 @@
 
 ### [Fixed] - 2026-03-26
 - Fixed "strict mode violation" for the "Create" button by refining the locator to target the arrow_forward icon specifically. (Commit: c8bbd03)
+- Fixed "strict mode violation" for Aspect Ratio and Image Count by using exact-match selectors ($=).
 
 ### [Refactored] - 2026-03-26
 - Started modular refactoring of `generator.js`.
@@ -22,3 +30,6 @@
 
 ### [Added] - 2026-03-26
 - Created a premium GUI configuration dashboard (`src/gui/index.html`).
+- Implemented `src/guiLauncher.js` to manage the GUI lifecycle.
+- Implemented `src/configureProject.js` to apply UI settings (Model, Count, Ratio).
+- Enabled 1K/2K quality selection in `src/downloadResult.js`.
