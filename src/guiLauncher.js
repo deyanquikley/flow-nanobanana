@@ -14,6 +14,13 @@ async function guiLauncher(context, page) {
     await page.goto(guiPath);
 
     return new Promise(async (resolve) => {
+        // Expose function to get initial data (like default output path)
+        await page.exposeFunction('getInitialData', () => {
+            return {
+                defaultOutputDir: path.resolve(__dirname, '..', 'output'),
+            };
+        });
+
         // Expose function to submit config
         await page.exposeFunction('submitConfig', (config) => {
             console.log('Configuration received (File: ' + config.promptFileName + ')');

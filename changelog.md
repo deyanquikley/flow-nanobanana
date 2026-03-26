@@ -1,5 +1,9 @@
 # Changelog - Playwright Flow Automation
 
+## [Dynamic File Picker] - 2026-03-26 (Commit: 279d825)
+- **Feature**: Replaced the previous dropdown select menu with a native HTML5 `<input type="file">` in `index.html`. Users can now browse their local File Explorer to select any `.txt` prompt file directly.
+- **Refactor**: Modified `generator.js` to parse the `promptsContent` array transmitted directly from the GUI's `FileReader` instead of reading via the Node.js backend to circumvent static path mappings.
+
 ## [Fixed Synchronization & Duplicates] - 2026-03-26 (Commit: f338f81, e2f59e8)
 - **Bug Fix**: Fixed `downloadResult.js` overwriting files by appending a guaranteed unique timestamp (`Date.now()`) to the `.suggestedFilename()` provided by Playwright.
 - **Bug Fix**: Solved synchronization issue where `waitForGeneration.js` was resolving immediately due to seeing old images, causing subsequent prompts to re-download old results.

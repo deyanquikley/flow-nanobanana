@@ -41,12 +41,15 @@ async function run() {
         // 5. Apply UI Settings (Model, Count, Ratio)
         await configureProject(page, config);
 
-        // Ensure output directory exists
-        if (!fs.existsSync(outputDir)) {
-            fs.mkdirSync(outputDir);
+        // Ensure custom output directory exists
+        const finalOutputDir = config.outputPath || outputDir;
+        if (!fs.existsSync(finalOutputDir)) {
+            fs.mkdirSync(finalOutputDir, { recursive: true });
         }
 
-        console.log('Ready to process prompts.');
+        console.log(`Ready to process prompts. Saving to: ${finalOutputDir}`);
+
+        let globalFileCounter = 1;
 
         for (let i = 0; i < prompts.length; i++) {
             const prompt = prompts[i];
@@ -61,7 +64,8 @@ async function run() {
 
                 // 8. Download Result
                 for (let j = 0; j < Math.min(config.count, newSrcs.length); j++) {
-                    await downloadResult(page, newSrcs[j], i, outputDir, config.quality);
+                    await downloadResult(page, newSrcs[j], globalFileCounter, finalOutputDir, config.quality, config.filePrefix);
+                    globalFileCounter++;
                     // 9. Return to Grid
                     await returnToGrid(page);
                     await page.waitForTimeout(1000);

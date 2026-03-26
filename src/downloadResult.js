@@ -4,11 +4,12 @@ const path = require('path');
  * Opens the detail view for a specific generated image and downloads it.
  * @param {Page} page - The Playwright Page object.
  * @param {string} targetSrc - The exact image URL to target and click.
- * @param {number} promptIndex - The index of the prompt.
+ * @param {number} globalIndex - The global sequence number for the file.
  * @param {string} outputDir - The directory to save the download to.
  * @param {string} quality - The quality to download ('1k' or '2k').
+ * @param {string} prefix - Optional filename prefix.
  */
-async function downloadResult(page, targetSrc, promptIndex, outputDir, quality = '1k') {
+async function downloadResult(page, targetSrc, globalIndex, outputDir, quality = '1k', prefix = '') {
     console.log(`Generation complete. Opening detail view for matching new image...`);
     
     // Find the specific image by exact src
@@ -50,13 +51,17 @@ async function downloadResult(page, targetSrc, promptIndex, outputDir, quality =
     ]);
 
     const suggested = download.suggestedFilename();
+    const timestamp = Date.now();
     let fileName;
+    
+    const prefixPart = prefix ? `${prefix}_` : '';
+
     if (suggested) {
         const ext = path.extname(suggested);
         const base = path.basename(suggested, ext);
-        fileName = `${base}_${Date.now()}${ext}`;
+        fileName = `${globalIndex}_${prefixPart}${base}_${timestamp}${ext}`;
     } else {
-        fileName = `generation_${Date.now()}_${promptIndex}.png`;
+        fileName = `${globalIndex}_${prefixPart}generation_${timestamp}.png`;
     }
     
     const filePath = path.join(outputDir, fileName);
