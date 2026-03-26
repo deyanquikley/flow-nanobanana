@@ -14,15 +14,9 @@ async function guiLauncher(context, page) {
     await page.goto(guiPath);
 
     return new Promise(async (resolve) => {
-        // Expose function to get .txt files
-        await page.exposeFunction('getPromptFiles', () => {
-            const rootDir = path.join(__dirname, '..');
-            return fs.readdirSync(rootDir).filter(f => f.endsWith('.txt'));
-        });
-
         // Expose function to submit config
         await page.exposeFunction('submitConfig', (config) => {
-            console.log('Configuration received:', config);
+            console.log('Configuration received (File: ' + config.promptFileName + ')');
             resolve(config);
         });
     });

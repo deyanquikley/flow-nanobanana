@@ -2,7 +2,6 @@ const path = require('path');
 const fs = require('fs');
 
 // Modular Imports
-const readPrompts = require('./src/readPrompts');
 const initBrowser = require('./src/initBrowser');
 const navigateToFlow = require('./src/navigateToFlow');
 const processPrompt = require('./src/processPrompt');
@@ -26,10 +25,15 @@ async function run() {
         const config = await guiLauncher(context, page);
         console.log('Starting automation with config:', config);
 
-        // 3. Read prompts based on GUI selection
-        const promptsFile = path.join(__dirname, config.promptFile);
-        const prompts = readPrompts(promptsFile);
-        console.log(`Loaded ${prompts.length} prompts from ${config.promptFile}.`);
+        // 3. Read prompts from GUI upload
+        const rawText = config.promptsContent || '';
+        const prompts = rawText.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+        
+        if (prompts.length === 0) {
+            console.log("No prompts found in the selected file.");
+            process.exit(1);
+        }
+        console.log(`Loaded ${prompts.length} prompts from uploaded file: ${config.promptFileName}.`);
 
         // 4. Navigate to Flow
         await navigateToFlow(page);

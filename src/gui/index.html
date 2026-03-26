@@ -164,9 +164,7 @@
 
         <div class="form-group">
             <label>Prompts File (.txt)</label>
-            <select id="promptFile">
-                <option value="prompts.txt">prompts.txt</option>
-            </select>
+            <input type="file" id="promptFile" accept=".txt" style="padding: 10px; cursor: pointer; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; width: 100%; color: white;">
         </div>
 
         <div class="form-group">
@@ -222,9 +220,28 @@
     </div>
 
     <script>
+        let fileContent = null;
+
+        document.getElementById('promptFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    fileContent = evt.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+
         async function start() {
+            if (!fileContent) {
+                alert('Tolong pilih file prompt (.txt) terlebih dahulu!');
+                return;
+            }
+
             const config = {
-                promptFile: document.getElementById('promptFile').value,
+                promptsContent: fileContent,
+                promptFileName: document.getElementById('promptFile').files[0].name,
                 model: document.querySelector('input[name="model"]:checked').value,
                 ratio: document.querySelector('input[name="ratio"]:checked').value,
                 count: parseInt(document.getElementById('count').value),
@@ -239,21 +256,6 @@
                 alert('Automation starting with: ' + JSON.stringify(config));
             }
         }
-
-        // Initialize file list if possible
-        window.onload = async () => {
-            if (window.getPromptFiles) {
-                const files = await window.getPromptFiles();
-                const select = document.getElementById('promptFile');
-                select.innerHTML = '';
-                files.forEach(f => {
-                    const opt = document.createElement('option');
-                    opt.value = f;
-                    opt.innerText = f;
-                    select.appendChild(opt);
-                });
-            }
-        };
     </script>
 </body>
 </html>

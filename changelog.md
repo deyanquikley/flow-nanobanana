@@ -1,6 +1,7 @@
 # Changelog - Playwright Flow Automation
 
-## [Fixed Synchronization] - 2026-03-26 (Commit: f338f81)
+## [Fixed Synchronization & Duplicates] - 2026-03-26 (Commit: f338f81, e2f59e8)
+- **Bug Fix**: Fixed `downloadResult.js` overwriting files by appending a guaranteed unique timestamp (`Date.now()`) to the `.suggestedFilename()` provided by Playwright.
 - **Bug Fix**: Solved synchronization issue where `waitForGeneration.js` was resolving immediately due to seeing old images, causing subsequent prompts to re-download old results.
 - **Refactor**: Changed image tracking logic to record `oldSrcs` in `processPrompt.js`, wait for `config.count` new `img.src` additions in `waitForGeneration.js`, and click the specific `targetSrc` in `downloadResult.js`.
 
